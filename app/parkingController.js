@@ -2,8 +2,6 @@
 
 angular.module('parkingApp')
     .controller('ParkingController', function ($scope, $http, $log, $filter) {
-        $scope.message = 'Hello world!';
-
         var width = 1960,
             height = 1500;
 
@@ -28,18 +26,41 @@ angular.module('parkingApp')
             path.projection(projection);
 
 
-            svg.append("g")
-                .attr("class", "stadtkreis")
-                .selectAll("path")
+            var g = svg.append("g")
+                .attr("class", "stadtkreis");
+                g.selectAll("path")
                 .data(topojson.feature(stadtkreise, stadtkreise.objects.stadtkreis).features)
                 .enter().append("path")
                 .attr("d", path)
                 .style("fill", function(d) { return fill(path.area(d)); });
+            var pg = svg.append("g")
+                .attr("class", "parking");
 
-            //svg.append("path")
-            //    .datum(topojson.mesh(stadtkreise, stadtkreise.objects.stadtkreis, function(a, b) {return a.id !== b.id; }))
-            //    .attr("class", "states")
-            //    .attr("d", path);
+            d3.json("parkhaus.json", function(error, data) {
+                pg.selectAll("circle")
+                    .data(data.features)
+                    .enter()
+                    .append("circle")
+                    .attr("cx", function (d) {
+                        console.log(d);
+                        var coords = d.geometry.coordinates;
+                        return projection([coords[0], coords[1]])[0];
+                    })
+                    .attr("cy", function (d) {
+                        var coords = d.geometry.coordinates;
+                        return projection([coords[0], coords[1]])[1];
+                    })
+                    .attr("r", 5)
+                    .style("fill", "red")
+                    .on('mouseover', function(d,i){
+                        d3.select(this).style('fill', 'green').attr('r', '10');
+                    })
+                    .on('mouseout', function(d,i){
+                        d3.select(this).style('fill', 'red').attr('r', '5');
+                    });
+            });
+
+
         });
 
 
