@@ -3,10 +3,24 @@
 <head>
     <script src="bower_components/angular/angular.js" charset="utf-8"></script>
     <script src="bower_components/d3/d3.min.js" charset="utf-8"></script>
-
+    <script src="bower_components/topojson/topojson.js" charset="utf-8"></script>
     <script src="app.js" charset="utf-8"></script>
     <script src="parkingController.js" charset="utf-8"></script>
     <style>
+        path {
+            stroke: white;
+            stroke-width: 0.25px;
+            fill: grey;
+        }
+
+
+
+        .states {
+            fill: none;
+            stroke: #fff;
+            stroke-linejoin: round;
+        }
+
 
     </style>
 </head>
@@ -15,6 +29,10 @@
 <h1>Parking Lots</h1>
 
 {{message}}
+
+<div id="map">
+
+</div>
 
 <script>
 
