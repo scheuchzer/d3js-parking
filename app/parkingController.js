@@ -10,7 +10,7 @@ angular.module('parkingApp')
 
         var color = d3.scale.linear().domain([0, 100]).range(['red', 'green']);
         var fill = d3.scale.log()
-            .domain([10, 400])
+            .domain([10, 500])
             .range(["brown", "steelblue"]);
 
         var path = d3.geo.path();
@@ -64,9 +64,6 @@ angular.module('parkingApp')
                         var centerName = d.properties.Kname;
                         var center = centers[centerName];
                         center = path.centroid(center);
-                        stadtkreisText.transition()
-                        .duration(200)
-                        .style("opacity", .6);
                         stadtkreisText.html(d.properties.Kname)
                         .style("left", center[0] + "px")
                         .style("top", center[1]+50 + "px");

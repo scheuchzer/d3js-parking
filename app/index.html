@@ -10,16 +10,25 @@
         path {
             stroke: white;
             stroke-width: 0.25px;
-            fill: grey;
+            transition-property: opacity;
+            transition-duration: 200ms;
+            transition-timing-function: linear;
+            opacity: 0.6;
         }
 
         path:hover {
             stroke: yellow;
             stroke-width: 2px;
             fill: grey;
+            transition-property: opacity;
+            transition-duration: 200ms;
+            transition-timing-function: linear;
+            opacity: 0.4;
         }
 
-
+        circle {
+            fill: grey;
+        }
 
         .tooltip {
             position: absolute;
