@@ -68,7 +68,7 @@ angular.module('parkingApp')
                         center = path.centroid(center);
                         stadtkreisText.html(d.properties.Kname)
                         .style("left", center[0] + "px")
-                        .style("top", center[1]+50 + "px")
+                        .style("top", center[1]+100 + "px")
                         .transition()
                         .duration(500)
                         .style("opacity", 0.9);
