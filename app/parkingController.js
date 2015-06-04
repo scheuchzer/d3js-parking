@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('parkingApp')
-    .controller('ParkingController', function ($scope, $http, $log, $filter, $interval) {
+angular.module('parkingControllers', [])
+    .controller('ParkingController', ['$scope', '$http', '$interval', 'DataParser', function ($scope, $http, $interval, DataParser) {
         var centers = [];
         $scope.parkings = {};
         $scope.interval = 5000;
@@ -27,7 +27,7 @@ angular.module('parkingApp')
 
         var stadtkreisText = d3.select('#map').append("div")
             .attr("class", "stadtkreisText")
-            .style("opacity", 1);
+            .style("opacity", 0);
 
         d3.json("stadtkreisTopo.json", function(error, stadtkreise) {
             var featureCollection = topojson.feature(stadtkreise, stadtkreise.objects.stadtkreis);
@@ -71,7 +71,7 @@ angular.module('parkingApp')
                         .style("top", center[1]+100 + "px")
                         .transition()
                         .duration(500)
-                        .style("opacity", 0.9);
+                        .style("opacity", 0.6);
                 })
                 .on('mouseout', function(d,i){
                     var centerName = d.properties.Kname;
@@ -166,62 +166,12 @@ angular.module('parkingApp')
                         return projection([coords[0], coords[1]])[1];
                     })
                     .attr("r", 5);
-            };
+            }
 
-            d3.xml("rss.xml", "application/xml", initializeParkings);
-            function initializeParkings(error, data) {
-                var elements = cleanFeedForPlot(data);
-                elements.forEach(function(d) {
-                    var name = d.name;
-                    name = name.replace('Parkhaus ','');
-                    name = name.replace('Parkplatz ','');
-                    name = name.replace('Parkgarage am ','');
-                    $scope.parkings[name] = { name: name, free: d.freeSpaces};
-                });
+            DataParser.parse("rss.xml", function(parkings) {
+                $scope.parkings = parkings;
                 $scope.$apply();
-
-            }
-
-            function cleanFeedForPlot(data) {
-                var elementsPlusOtherStuff = data.children[0].children[0].children;
-                var elementsWithoutStuff = cleanFeed(elementsPlusOtherStuff);
-                var elements = extractInterestingInfo(elementsWithoutStuff);
-
-                return elements;
-            }
-
-            function cleanFeed(elementsWithStuff) {
-                var elementsWithoutStuff = [];
-                for (var i = 0; i < elementsWithStuff.length; i++) {
-                    var element = elementsWithStuff[i];
-                    if (element.tagName === "item") {
-                        elementsWithoutStuff.push(element);
-                    }
-                }
-
-                return elementsWithoutStuff;
-            }
-
-            function extractInterestingInfo(dirtyElements) {
-                return dirtyElements.map(function(e) {
-                    var nameAdress = e.getElementsByTagName("title")[0].innerHTML;
-                    var status = e.getElementsByTagName("description")[0].innerHTML;
-
-                    return {
-                        name: extractName(nameAdress),
-                        freeSpaces: extractFreeSpaces(status)
-                    }
-                });
-
-                function extractName(nameAdress) {
-                    return nameAdress.split("/")[0].trim();
-                }
-
-                function extractFreeSpaces(status) {
-                    return Number.parseInt(status.split("/")[1].trim());
-                }
-            }
-
+            });
 
 
         });
@@ -240,4 +190,4 @@ angular.module('parkingApp')
         });
 
 
-    });
+    }]);

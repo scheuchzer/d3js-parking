@@ -1,4 +1,7 @@
 'use strict';
 
-var app = angular.module('parkingApp', []);
+var app = angular.module('parkingApp', [
+    'parkingControllers',
+    'dataParser'
+]);
 
