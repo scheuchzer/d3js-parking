@@ -28,6 +28,11 @@
 
         circle {
             fill: grey;
+            opacity: 0.9;
+        }
+
+        .circleHover {
+            opacity: 0.4;
         }
 
         .tooltip {
@@ -62,6 +67,8 @@
 <body ng-app='parkingApp' ng-controller="ParkingController">
 
 <h1>Parkplätze</h1>
+Update interval: {{interval / 1000}}s <br/>
+<input type="range" min="500" max="60000" ng-model="interval" step="500" />
 <div id="map"></div>
 <div>
     <table>

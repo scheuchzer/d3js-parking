@@ -4,6 +4,8 @@ angular.module('parkingApp')
     .controller('ParkingController', function ($scope, $http, $log, $filter, $interval) {
         var centers = [];
         $scope.parkings = {};
+        $scope.interval = 5000;
+        var intervalPromise = {};
 
         var width = 1000,
             height = 500;
@@ -66,7 +68,10 @@ angular.module('parkingApp')
                         center = path.centroid(center);
                         stadtkreisText.html(d.properties.Kname)
                         .style("left", center[0] + "px")
-                        .style("top", center[1]+50 + "px");
+                        .style("top", center[1]+50 + "px")
+                        .transition()
+                        .duration(500)
+                        .style("opacity", 0.9);
                 })
                 .on('mouseout', function(d,i){
                     var centerName = d.properties.Kname;
@@ -102,10 +107,12 @@ angular.module('parkingApp')
                         if (parking) {
                             free = parking.free;
                         }
+
                         d3.select(this)
                             .transition()
                             .duration(200)
-                            .attr('r', '15');
+                            .attr('r', '20')
+                            .attr('class', 'circleHover');
                         div.transition()
                             .duration(200)
                             .style("opacity", .9);
@@ -122,7 +129,8 @@ angular.module('parkingApp')
                         d3.select(this)
                             .transition()
                             .duration(500)
-                            .attr('r', '5');
+                            .attr('r', '5')
+                            .attr('class', null);
                         div.transition()
                             .duration(500)
                             .style("opacity", 0);
@@ -218,12 +226,18 @@ angular.module('parkingApp')
 
         });
 
-        $interval(function(){
-            angular.forEach($scope.parkings, function(d){
-                d.free = Math.max(0, Math.round(d.free +Math.random()*40-20));
-                $scope.parkings[d.name] = d;
-            });
+        $scope.$watch('interval', function(){
+            if (intervalPromise) {
+                $interval.cancel(intervalPromise);
+            }
+            intervalPromise = $interval(function(){
+                angular.forEach($scope.parkings, function(d){
+                    d.free = Math.max(0, Math.round(d.free +Math.random()*40-20));
+                    $scope.parkings[d.name] = d;
+                });
 
-        }, 1000);
+            }, $scope.interval);
+        });
+
 
     });
