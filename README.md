@@ -11,7 +11,7 @@ npm install -g topojson
 
 Convert the data:
 ```
-topojson -o output.json input.json
+topojson -o t.json -p Kname app/stadtkreis.json
 ```
 
 ## Parking lookup
