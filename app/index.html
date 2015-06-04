@@ -52,7 +52,18 @@
 </head>
 <body ng-app='parkingApp' ng-controller="ParkingController">
 
-<h1>Parking Lots</h1>
-
+<h1>Parkplätze</h1>
+<div id="map"></div>
+<div>
+    <table>
+        <tr>
+            <th>Parkhaus</th>
+            <th>Frei</th>
+        </tr>
+        <tr ng-repeat="p in parkings">
+            <td>{{p.name}}</td><td>{{p.free}}</td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>
